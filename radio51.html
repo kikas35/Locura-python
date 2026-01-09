@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>🎸🔥 Rock and Rolling 🔥🎸</title>
+
+<style>
+/* ============================
+   1- ESTILOS GENERALES
+   ============================ */
+body{
+  background:#111;
+  color:#fff;
+  text-align:center;
+  font-family:Arial;
+  padding:20px;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:100vh;
+}
+
+h1{
+  margin-top:40px;
+  color:#003C8F;
+  text-shadow:2px 2px 8px #000;
+  font-size:32px;
+  line-height:1.3;
+}
+
+/* ============================
+   2- FOTO PERFIL 300PX
+   ============================ */
+#imagePreview{
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border: 3px solid #3A7BD5;
+  margin-top: -20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 15px #000;
+}
+
+/* ============================
+   3- CONTENEDORES CENTRALES
+   ============================ */
+.centrado-total{
+  margin-top:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+}
+
+.subirZona{
+  margin-top:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+label{
+  cursor:pointer;
+  background:#3A7BD5;
+  padding:8px 14px;
+  border-radius:8px;
+  color:white;
+  font-weight:bold;
+  box-shadow:0 0 10px #000;
+  margin-top:10px;
+}
+
+input[type="file"]{
+  display:none;
+}
+
+/* ============================
+   4- REPRODUCTOR PRINCIPAL
+   ============================ */
+.player-custom{
+  margin-top:40px;
+  background:#3A7BD5;
+  padding:10px 12px;
+  width:340px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 0 12px #000;
+}
+
+#playBtn, #soundBtn{
+  background:white;
+  color:black;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.barra{
+  flex:1;
+  height:6px;
+  background:#ffffff55;
+  border-radius:4px;
+  overflow:hidden;
+  box-shadow:0 0 8px #3A7BD5;
+}
+
+#progreso{
+  height:100%;
+  width:0%;
+  background:white;
+}
+
+/* ============================
+   5- CHAT FLOTANTE
+   ============================ */
+#chat-kikas{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:280px;
+  height:380px;
+  background:#111;
+  border:3px solid #3A7BD5;
+  border-radius:12px;
+  box-shadow:0 0 15px #000;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  z-index:9999;
+}
+
+/* ============================
+   6- CABECERA DEL CHAT
+   ============================ */
+#chat-header{
+  background:#3A7BD5;
+  padding:10px;
+  text-align:center;
+  font-weight:bold;
+  color:white;
+  font-size:18px;
+  letter-spacing:1px;
+  position:relative;
+}
+
+/* ============================
+   7- BOTÓN MINIMIZAR CHAT
+   ============================ */
+#chat-toggle{
+  position:absolute;
+  right:10px;
+  top:5px;
+  background:none;
+  border:none;
+  color:white;
+  font-size:22px;
+  cursor:pointer;
+}
+
+/* ============================
+   8- ÁREA DE MENSAJES
+   ============================ */
+#chat-mensajes{
+  flex:1;
+  padding:10px;
+  overflow-y:auto;
+  font-size:14px;
+  color:white;
+}
+
+/* ============================
+   9- INPUT DE ESCRITURA
+   ============================ */
+#chat-input{
+  border:none;
+  padding:10px;
+  width:100%;
+  box-sizing:border-box;
+  outline:none;
+  background:#222;
+  color:white;
+}
+
+/* ============================
+   10- BARRA AZUL INFERIOR
+   ============================ */
+#barra-azul{
+  background:#3A7BD5;
+  padding:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  position:relative;
+}
+
+/* ============================
+   11- BOTONES SEND Y EMOJI
+   ============================ */
+#emojiBtn{
+  background:white;
+  border:none;
+  padding:6px 10px;
+  border-radius:6px;
+  font-size:20px;
+  cursor:pointer;
+}
+
+#chat-send{
+  background:white;
+  border:none;
+  padding:6px 14px;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* ============================
+   12- PANEL EMOJIS HACIA ARRIBA
+   ============================ */
+#emojiPanel{
+  display:none;
+  position:absolute;
+  bottom:60px;
+  left:8px;
+  background:#222;
+  border:2px solid #3A7BD5;
+  padding:10px;
+  border-radius:10px;
+  max-height:150px;
+  width:220px;
+  overflow-y:auto;
+  font-size:22px;
+  box-shadow:0 0 10px #000;
+}
+
+.emoji{
+  background:none;
+  border:none;
+  font-size:22px;
+  cursor:pointer;
+  margin:3px;
+}
+</style>
+</head>
+
+<body spellcheck="false">
+
+<h1>🎸🔥 Rock and Rolling 🔥🎸</h1>
+
+<div class="centrado-total">
+
+  <img id="imagePreview" src="">
+
+  <div class="player-custom">
+    <button id="playBtn">▶🎵</button>
+    <div class="barra">
+      <div id="progreso"></div>
+    </div>
+    <button id="soundBtn">👂🔊</button>
+  </div>
+
+  <audio id="radio">
+    <source src="https://stream.zeno.fm/1pqyljflby8uv" type="audio/mpeg">
+  </audio>
+
+  <div class="subirZona">
+    <label>📸 Subir foto
+      <input type="file" id="imageInput" accept="image/*">
+    </label>
+  </div>
+
+  <div class="subirZona">
+    <label>🌌 Subir fondo
+      <input type="file" id="bgInput" accept="image/*">
+    </label>
+  </div>
+
+</div>
+
+<div id="chat-kikas">
+  <div id="chat-header">
+    💬 Rock Chat
+    <button id="chat-toggle">⬇️⬆️</button>
+  </div>
+
+  <div id="chat-mensajes"></div>
+
+  <input id="chat-input" type="text" placeholder="Escribe algo...">
+
+  <div id="barra-azul">
+    <button id="emojiBtn">😊</button>
+    <button id="chat-send">SEND</button>
+
+    <div id="emojiPanel">
+      <button class="emoji">😀</button>
+      <button class="emoji">😍</button>
+      <button class="emoji">🤔</button>
+      <button class="emoji">😏</button>
+      <button class="emoji">😅</button>
+      <button class="emoji">😬</button>
+      <button class="emoji">😇</button>
+      <button class="emoji">😈</button>
+      <button class="emoji">🤨</button>
+      <button class="emoji">🥺</button>
+      <button class="emoji">🤭</button>
+      <button class="emoji">🤪</button>
+      <button class="emoji">🤓</button>
+      <button class="emoji">🫠</button>
+      <button class="emoji">🫣</button>
+      <button class="emoji">🫡</button>
+      <button class="emoji">🤘</button>
+      <button class="emoji">🔥</button>
+      <button class="emoji">🎸</button>
+      <button class="emoji">😂</button>
+      <button class="emoji">😎</button>
+      <button class="emoji">💀</button>
+      <button class="emoji">🤯</button>
+      <button class="emoji">🙏</button>
+      <button class="emoji">👀</button>
+      <button class="emoji">💋</button>
+      <button class="emoji">😜</button>
+      <button class="emoji">🤩</button>
+      <button class="emoji">😭</button>
+      <button class="emoji">😡</button>
+      <button class="emoji">😱</button>
+      <button class="emoji">🤤</button>
+      <button class="emoji">😴</button>
+      <button class="emoji">💘</button>
+      <button class="emoji">💣</button>
+      <button class="emoji">💥</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================
+   22- RADIO: PLAY / PAUSE
+   ============================ */
+const radio = document.getElementById("radio");
+const playBtn = document.getElementById("playBtn");
+const soundBtn = document.getElementById("soundBtn");
+const progreso = document.getElementById("progreso");
+
+playBtn.onclick = () => {
+  if(radio.paused){
+    radio.play();
+    playBtn.textContent = "⏸🎵";
+  } else {
+    radio.pause();
+    playBtn.textContent = "▶🎵";
+  }
+};
+
+/* ============================
+   23- RADIO: SONIDO
+   ============================ */
+let muted = false;
+soundBtn.onclick = () => {
+  muted = !muted;
+  radio.muted = muted;
+  soundBtn.textContent = muted ? "👂🔇" : "👂🔊";
+};
+
+/* ============================
+   24- RADIO: PROGRESO
+   ============================ */
+radio.ontimeupdate = () => {
+  if(radio.duration){
+    progreso.style.width = (radio.currentTime / radio.duration) * 100 + "%";
+  }
+};
+
+/* ============================
+   25- FOTO PERFIL
+   ============================ */
+const imageInput = document.getElementById("imageInput");
+const imagePreview = document.getElementById("imagePreview");
+
+const savedProfile = localStorage.getItem("fotoPerfil");
+if(savedProfile){
+  imagePreview.src = savedProfile;
+}
+
+imageInput.addEventListener("change", e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    imagePreview.src = ev.target.result;
+    localStorage.setItem("fotoPerfil", ev.target.result);
+  };
+  r.readAsDataURL(f);
+});
+
+/* ============================
+   26- FONDO PÁGINA
+   ============================ */
+const bgInput = document.getElementById("bgInput");
+const savedBg = localStorage.getItem("fondoPagina");
+if(savedBg){
+  document.body.style.backgroundImage = `url('${savedBg}')`;
+}
+
+bgInput.addEventListener("change", e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    document.body.style.backgroundImage = `url('${ev.target.result}')`;
+    localStorage.setItem("fondoPagina", ev.target.result);
+  };
+  r.readAsDataURL(f);
+});
+
+/* ============================
+   27- CHAT: MENSAJES
+   ============================ */
+const chatMensajes = [];
+const chatBox = document.getElementById("chat-mensajes");
+const chatInput = document.getElementById("chat-input");
+const chatSend = document.getElementById("chat-send");
+
+function actualizarChat(){
+  chatBox.innerHTML = "";
+  chatMensajes.forEach(m => {
+    const div = document.createElement("div");
+    div.textContent = m;
+    chatBox.appendChild(div);
+  });
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+/* ============================
+   28- CHAT: DETECTAR IDIOMA
+   ============================ */
+function detectarIdioma(texto){
+  texto = texto.toLowerCase();
+
+  if(/[áéíóúñ¿¡]/.test(texto)) return "es";
+  if(/(ão|ões|ês|ás|pois|tudo bem|olá)/.test(texto)) return "pt";
+  if(/(ciao|come stai|bene|grazie)/.test(texto)) return "it";
+  if(/[ığüşöç]|merhaba|selam|nasilsin|nasılsın|tamam|evet|hayir|hayır|iyi|tesekkurler|teşekkürler/.test(texto)) return "tr";
+  if(/(hej|hur mår du)/.test(texto)) return "se";
+  if(/(hei|hvordan går det)/.test(texto)) return "no";
+  if(/(hej|hvordan har du det)/.test(texto)) return "dk";
+  if(/[\u0600-\u06FF]/.test(texto)) return "ar";
+  if(/[åäö]/.test(texto)) return "fi";
+  if(/[α-ω]/.test(texto)) return "gr";
+
+  return "uk";
+}
+
+/* ============================
+   29- CHAT: RESPUESTAS
+   ============================ */
+function respuestaPorIdioma(idioma){
+  const frases = {
+    es: ["🤘 ¡Eso suena potente!", "🔥 Dale caña, orejnas.", "🎸 Rock and roll, tía."],
+    pt: ["🤘 Isso tá com força!", "🔥 Bora lá, Kikas.", "🎸 Rock no máximo."],
+    uk: ["🤘 That sounds powerful.", "🔥 Keep it rolling.", "🎸 Pure rock energy."],
+    it: ["🤘 Suona potente!", "🔥 Andiamo forte.", "🎸 Rock puro."],
+    tr: ["🤘 Bu çok güçlü!", "🔥 Devam et.", "🎸 Saf rock enerjisi."],
+    se: ["🤘 Det låter starkt!", "🔥 Kör hårt.", "🎸 Ren rockenergi."],
+    no: ["🤘 Det høres kraftig ut!", "🔥 Kjør på.", "🎸 Ren rockenergi."],
+    dk: ["🤘 Det lyder stærkt!", "🔥 Kør videre.", "🎸 Ren rockenergi."],
+    ar: ["🤘 هالشي قوي!", "🔥 يلا نكمل.", "🎸 روك على الآخر."],
+    fi: ["🤘 Kuulostaa vahvalta!", "🔥 Anna mennä.", "🎸 Puhdasta rockia."],
+    gr: ["🤘 Ακούγεται δυνατό!", "🔥 Πάμε γερά.", "🎸 Καθαρή ροκ ενέργεια."]
+  };
+
+  return frases[idioma][Math.floor(Math.random() * frases[idioma].length)];
+}
+
+/* ============================
+   30- CHAT: ENVIAR MENSAJE
+   ============================ */
+chatSend.onclick = () => {
+  if(chatInput.value.trim() === "") return;
+
+  const texto = chatInput.value;
+  chatMensajes.push("👤 Tú: " + texto);
+
+  const idioma = detectarIdioma(texto);
+  const respuesta = respuestaPorIdioma(idioma);
+
+  chatMensajes.push("🤖 Bot: " + respuesta);
+
+  chatInput.value = "";
+  actualizarChat();
+};
+
+/* ============================
+   31- CHAT: ENTER PARA ENVIAR
+   ============================ */
+chatInput.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    e.preventDefault();
+    chatSend.click();
+  }
+});
+
+/* ============================
+   32- CHAT: EMOJIS
+   ============================ */
+const emojiBtn = document.getElementById("emojiBtn");
+const emojiPanel = document.getElementById("emojiPanel");
+
+emojiBtn.onclick = () => {
+  emojiPanel.style.display = emojiPanel.style.display === "none" ? "block" : "none";
+};
+
+document.querySelectorAll(".emoji").forEach(btn => {
+  btn.onclick = () => {
+    chatInput.value += btn.textContent;
+  };
+});
+
+/* ============================
+   33- CHAT: MINIMIZAR / MAXIMIZAR
+   ============================ */
+const chatBoxContainer = document.getElementById("chat-kikas");
+const chatToggle = document.getElementById("chat-toggle");
+let chatAbierto = true;
+
+chatToggle.onclick = () => {
+  chatAbierto = !chatAbierto;
+
+  if (chatAbierto) {
+    chatBoxContainer.style.height = "380px";
+    chatToggle.textContent = "⬇️⬆️";
+  } else {
+    chatBoxContainer.style.height = "40px";
+    chatToggle.textContent = "⬆️⬇️";
+    emojiPanel.style.display = "none";
+  }
+};
+
+/* ============================
+   34- CERRAR EMOJIS AL HACER CLICK FUERA
+   ============================ */
+document.addEventListener("click", function(e){
+  if (!emojiPanel.contains(e.target) && e.target !== emojiBtn) {
+    emojiPanel.style.display = "none";
+  }
+});
+
+/* ============================
+   35- FIN
+   ============================ */
+</script>
+</body>
+</html>
